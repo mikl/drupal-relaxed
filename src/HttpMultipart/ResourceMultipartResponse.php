@@ -40,8 +40,8 @@ class ResourceMultipartResponse extends MultipartResponse implements CacheableRe
     // This fixes the "Malformed encoding found in chunked-encoding"
     // error message in curl and makes possible to get the correct response body.
     // @todo Figure out if this is the best way to fix the problem.
-    $size = $this->getSize();
-    echo "$size\r\n";
+//    $size = $this->getSize();
+//    echo "$size\r\n";
     parent::sendContent();
   }
 
