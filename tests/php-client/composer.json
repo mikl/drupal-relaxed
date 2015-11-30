@@ -10,6 +10,6 @@
     }
   ],
   "require": {
-    "relaxedws/replicator": "test-host-header-with-port"
+    "relaxedws/replicator": "dev-test-host-header-with-port"
   }
 }
