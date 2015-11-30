@@ -7,6 +7,10 @@
     {
       "type": "git",
       "url": "https://github.com/jeqq/couchdb-replicator"
+    },
+    {
+      "type": "git",
+      "url": "https://github.com/jeqq/couchdb-client"
     }
   ],
   "require": {
