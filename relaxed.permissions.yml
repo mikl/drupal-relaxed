@@ -6,3 +6,18 @@ perform pull replication:
   title: 'Perform pull replication'
   description: 'Perform pull replication regardless of permission restrictions. User will only be able to read content in order to replicate the content somewhere else.'
   restrict access: true
+add replication entities:
+  title: 'Create new Replication entities'
+
+administer replication entities:
+  title: 'Administer Replication entities'
+  description: 'Allow to access the administration form to configure Replication entities.'
+
+delete replication entities:
+  title: 'Delete Replication entities'
+
+edit replication entities:
+  title: 'Edit Replication entities'
+
+view replication entities:
+  title: 'View Replication entities'

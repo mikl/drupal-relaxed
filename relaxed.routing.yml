@@ -38,3 +38,65 @@ entity.endpoint.delete_form:
     _permission: 'administer site configuration'
   options:
     _admin_route: TRUE
+
+# Replication routing definition
+entity.replication.canonical:
+  path: '/admin/replication/{replication}'
+  defaults:
+    _entity_view: 'replication'
+    _title: 'Replication'
+  requirements:
+    _entity_access: 'replication.view'
+  options:
+    _admin_route: TRUE
+
+entity.replication.collection:
+  path: '/admin/replication'
+  defaults:
+    _entity_list: 'replication'
+    _title: 'Replication list'
+  requirements:
+    _permission: 'view replication entities'
+  options:
+    _admin_route: TRUE
+
+entity.replication.add_form:
+  path: '/admin/replication/add'
+  defaults:
+    _entity_form: replication.add
+    _title: 'Add Replication'
+  requirements:
+    _permission: 'add replication entities'
+  options:
+    _admin_route: TRUE
+
+entity.replication.edit_form:
+  path: '/admin/replication/{replication}/edit'
+  defaults:
+    _entity_form: replication.edit
+    _title: 'Edit Replication'
+  requirements:
+    _permission: 'edit replication entities'
+  options:
+    _admin_route: TRUE
+
+entity.replication.delete_form:
+  path: '/admin/replication/{replication}/delete'
+  defaults:
+    _entity_form: replication.delete
+    _title: 'Delete Replication'
+  requirements:
+    _permission: 'delete replication entities'
+  options:
+    _admin_route: TRUE
+
+replication.settings:
+  path: 'admin/structure/replication'
+  defaults:
+   _form: '\Drupal\relaxed\Entity\Form\ReplicationSettingsForm'
+   _title: 'Replication settings'
+  requirements:
+    _permission: 'administer replication entities'
+  options:
+    _admin_route: TRUE
+

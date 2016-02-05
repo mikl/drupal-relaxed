@@ -98,3 +98,6 @@ services:
   plugin.manager.endpoint_check:
     class: Drupal\relaxed\Plugin\EndpointCheckManager
     parent: default_plugin_manager
+  plugin.manager.replicator.processor:
+    class: Drupal\relaxed\Plugin\ReplicatorManager
+    parent: default_plugin_manager
