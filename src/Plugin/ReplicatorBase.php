@@ -5,7 +5,7 @@
  * Contains \Drupal\relaxed\Plugin\ReplicatorBase.
  */
 
-namespace Drupal\relaxed;
+namespace Drupal\relaxed\Plugin;
 
 use Drupal\Component\Plugin\PluginBase;
 use Psr\Http\Message\UriInterface;
@@ -32,6 +32,7 @@ abstract class ReplicatorBase extends PluginBase implements ReplicatorInterface 
    */
   public function setSource(UriInterface $source) {
     $this->source = $source;
+    return $this;
   }
 
   /**
@@ -39,6 +40,7 @@ abstract class ReplicatorBase extends PluginBase implements ReplicatorInterface 
    */
   public function setTarget(UriInterface $target) {
     $this->target = $target;
+    return $this;
   }
 
   /**

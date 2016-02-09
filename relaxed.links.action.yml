@@ -3,5 +3,3 @@ entity.replication.add_form:
   title: 'Add Replication'
   appears_on:
     - entity.replication.collection
-    - entity.replication.canonical
-

@@ -9,6 +9,7 @@ namespace Drupal\relaxed;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
+use Drupal\Core\Link;
 use Drupal\Core\Routing\LinkGeneratorTrait;
 use Drupal\Core\Url;
 
@@ -23,26 +24,32 @@ class ReplicationListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['id'] = $this->t('Replication ID');
+    $header['replicated'] = $this->t('Deployed');
     $header['name'] = $this->t('Name');
-    return $header + parent::buildHeader();
+    $header['source'] = $this->t('Source');
+    $header['target'] = $this->t('Target');
+    $header['changed'] = $this->t('Updated');
+    $header['created'] = $this->t('Created');
+    return $header;
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
+    $formatter = \Drupal::service('date.formatter');
     /* @var $entity \Drupal\relaxed\Entity\Replication */
-    $row['id'] = $entity->id();
-    $row['name'] = $this->l(
-      $this->getLabel($entity),
-      new Url(
-        'entity.replication.edit_form', array(
-          'replication' => $entity->id(),
-        )
-      )
+    $row['replicated'] = $entity->get('replicated')->value ? $this->t('&#10004;') : $this->t('&#10006;');
+    $row['name'] = Link::createFromRoute(
+      $entity->label(),
+      'entity.replication.canonical',
+      ['replication' => $entity->id()]
     );
-    return $row + parent::buildRow($entity);
+    $row['source'] = $entity->get('source')->entity->label();
+    $row['target'] = $entity->get('target')->entity->label();
+    $row['changed'] = $formatter->format($entity->getChangedTime());
+    $row['created'] = $formatter->format($entity->getCreatedTime());
+    return $row;
   }
 
 }

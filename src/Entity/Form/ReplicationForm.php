@@ -10,6 +10,7 @@ namespace Drupal\relaxed\Entity\Form;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\Language;
+use Drupal\relaxed\Entity\Endpoint;
 
 /**
  * Form controller for Replication edit forms.
@@ -21,8 +22,32 @@ class ReplicationForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $replicators = \Drupal::service('plugin.manager.replicator')->getDefinitions();
+    if (empty($replicators)) {
+      drupal_set_message('There are no replicator plugins defined.', 'warning');
+      return;
+    }
+    $endpoints = Endpoint::loadMultiple();
+    if (empty($endpoints)) {
+      drupal_set_message('There are no endpoints defined.', 'warning');
+      return;
+    }
 
-    return parent::buildForm($form, $form_state);
+    $form = parent::buildForm($form, $form_state);
+
+    if (count($replicators) == 1) {
+      $form['replicator']['#attributes']['style'] = 'display: none;';
+    }
+
+    if ($this->getDefaultSource()) {
+      $form['source']['widget']['#default_value'] = $this->getDefaultSource();
+    }
+    if ($this->getDefaultTarget()) {
+      $form['target']['widget']['#default_value'] = $this->getDefaultTarget();
+    }
+    $form['actions']['submit']['#value'] = t('Review');
+
+    return $form;
   }
 
   /**
@@ -44,7 +69,34 @@ class ReplicationForm extends ContentEntityForm {
           '%label' => $entity->label(),
         ]));
     }
-    $form_state->setRedirect('entity.replication.edit_form', ['replication' => $entity->id()]);
+    $form_state->setRedirect('entity.replication.canonical', ['replication' => $entity->id()]);
   }
 
+  protected function getDefaultSource() {
+    $workspace = \Drupal::service('workspace.manager')->getActiveWorkspace();
+    $machine_name = $workspace->getMachineName();
+    $endpoints = Endpoint::loadMultiple();
+    foreach ($endpoints as $endpoint) {
+      $pluginid = $endpoint->getPlugin()->getPluginId();
+      if ($pluginid == 'workspace:' . $machine_name) {
+        return $endpoint->id();
+      }
+    }
+  }
+
+  protected function getDefaultTarget() {
+    $workspace = \Drupal::service('workspace.manager')->getActiveWorkspace();
+    $upstream = $workspace->get('upstream')->entity;
+    if (!$upstream) {
+      return null;
+    }
+    $machine_name = $upstream->getMachineName();
+    $endpoints = Endpoint::loadMultiple();
+    foreach ($endpoints as $endpoint) {
+      $pluginid = $endpoint->getPlugin()->getPluginId();
+      if ($pluginid == 'workspace:' . $machine_name) {
+        return $endpoint->id();
+      }
+    }
+  }
 }

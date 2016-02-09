@@ -7,7 +7,6 @@
 
 namespace Drupal\relaxed\Entity;
 
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
@@ -23,10 +22,9 @@ use Drupal\user\UserInterface;
  *   id = "replication",
  *   label = @Translation("Replication"),
  *   handlers = {
- *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "list_builder" = "Drupal\relaxed\ReplicationListBuilder",
- *     "views_data" = "Drupal\relaxed\Entity\ReplicationViewsData",
- *
+ *     "access" = "Drupal\relaxed\Entity\ReplicationAccessControlHandler",
+ *     "view_builder" = "Drupal\relaxed\Entity\ReplicationViewBuilder",
+ *     "list_builder" = "Drupal\relaxed\ReplicationListBuilder", *
  *     "form" = {
  *       "default" = "Drupal\relaxed\Entity\Form\ReplicationForm",
  *       "add" = "Drupal\relaxed\Entity\Form\ReplicationForm",
@@ -46,7 +44,8 @@ use Drupal\user\UserInterface;
  *     "edit-form" = "/admin/replication/{replication}/edit",
  *     "delete-form" = "/admin/replication/{replication}/delete"
  *   },
- *   field_ui_base_route = "replication.settings"
+ *   field_ui_base_route = "replication.settings",
+ *   local = TRUE
  * )
  */
 class Replication extends ContentEntityBase implements ReplicationInterface {
@@ -113,13 +112,14 @@ class Replication extends ContentEntityBase implements ReplicationInterface {
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Title'))
       ->setDescription(t('The title for the replication.'))
+      ->setRequired(TRUE)
       ->setSettings(array(
         'max_length' => 50,
         'text_processing' => 0,
       ))
       ->setDefaultValue('')
       ->setDisplayOptions('view', array(
-        'label' => 'above',
+        'label' => 'hidden',
         'type' => 'string',
         'weight' => -4,
       ))
@@ -149,13 +149,12 @@ class Replication extends ContentEntityBase implements ReplicationInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['source'] = BaseFieldDefinition::create('list_string')
+    $fields['source'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Source'))
       ->setDescription(t('The source endpoint.'))
-      ->setSettings(array(
-        'allowed_values' => []
-      ))
-      ->setDefaultValue('')
+      ->setRequired(TRUE)
+      ->setSetting('target_type', 'endpoint')
+      ->setSetting('handler', 'default')
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'weight' => -2,
@@ -167,13 +166,12 @@ class Replication extends ContentEntityBase implements ReplicationInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['target'] = BaseFieldDefinition::create('list_string')
-      ->setLabel(t('Description'))
-      ->setDescription(t('The description for the replication.'))
-      ->setSettings(array(
-        'allowed_values' => []
-      ))
-      ->setDefaultValue('')
+    $fields['target'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Target'))
+      ->setDescription(t('The target endpoint.'))
+      ->setRequired(TRUE)
+      ->setSetting('target_type', 'endpoint')
+      ->setSetting('handler', 'default')
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'weight' => -1,
@@ -186,12 +184,13 @@ class Replication extends ContentEntityBase implements ReplicationInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['replicator'] = BaseFieldDefinition::create('list_string')
-      ->setLabel(t('Description'))
-      ->setDescription(t('The description for the replication.'))
+      ->setLabel(t('Replicator'))
+      ->setDescription(t('The replicator plugin.'))
+      ->setRequired(TRUE)
       ->setSettings(array(
-        'allowed_values' => []
+        'allowed_values' => self::getReplicatorAllowedValues()
       ))
-      ->setDefaultValue('')
+      ->setDefaultValue(reset(self::getReplicatorAllowedValues()))
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'weight' => 0,
@@ -202,6 +201,10 @@ class Replication extends ContentEntityBase implements ReplicationInterface {
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
+
+    $fields['replicated'] = BaseFieldDefinition::create('datetime')
+      ->setLabel(t('Deployed'))
+      ->setDescription(t('The time that the entity was deployed.'));
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
@@ -225,4 +228,14 @@ class Replication extends ContentEntityBase implements ReplicationInterface {
   public static function getCurrentUserId() {
     return array(\Drupal::currentUser()->id());
   }
+
+  protected function getReplicatorAllowedValues() {
+    $replicators = \Drupal::service('plugin.manager.replicator')->getDefinitions();
+    $replicator_allowed_values = [];
+    foreach($replicators as $replicator) {
+      $replicator_allowed_values[$replicator['id']] = $replicator['label'];
+    }
+    return $replicator_allowed_values;
+  }
+
 }

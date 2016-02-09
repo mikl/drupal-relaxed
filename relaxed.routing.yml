@@ -54,7 +54,7 @@ entity.replication.collection:
   path: '/admin/replication'
   defaults:
     _entity_list: 'replication'
-    _title: 'Replication list'
+    _title: 'Deployments'
   requirements:
     _permission: 'view replication entities'
   options:

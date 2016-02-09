@@ -5,7 +5,7 @@
  * Contains \Drupal\relaxed\Plugin\ReplicatorInterface.
  */
 
-namespace Drupal\relaxed;
+namespace Drupal\relaxed\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Psr\Http\Message\UriInterface;
@@ -19,6 +19,7 @@ interface ReplicatorInterface extends PluginInspectionInterface {
    * Parses the URI for use by the push method.
    *
    * @param \Psr\Http\Message\UriInterface $source
+   * @return \Drupal\relaxed\Plugin\ReplicatorInterface
    */
   public function setSource(UriInterface $source);
 
@@ -26,6 +27,7 @@ interface ReplicatorInterface extends PluginInspectionInterface {
    * Parses the URI to use by the push method
    *
    * @param \Psr\Http\Message\UriInterface $target
+   * @return \Drupal\relaxed\Plugin\ReplicatorInterface
    */
   public function setTarget(UriInterface $target);
 
