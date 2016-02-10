@@ -28,8 +28,8 @@ class ReplicationForm extends ContentEntityForm {
       return;
     }
     $endpoints = Endpoint::loadMultiple();
-    if (empty($endpoints)) {
-      drupal_set_message('There are no endpoints defined.', 'warning');
+    if (count($endpoints) <2) {
+      drupal_set_message('Two or more endpoints are needed.', 'warning');
       return;
     }
 

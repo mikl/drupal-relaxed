@@ -44,7 +44,7 @@ entity.replication.canonical:
   path: '/admin/replication/{replication}'
   defaults:
     _entity_view: 'replication'
-    _title: 'Replication'
+    _title: 'Deployment'
   requirements:
     _entity_access: 'replication.view'
   options:
@@ -64,7 +64,7 @@ entity.replication.add_form:
   path: '/admin/replication/add'
   defaults:
     _entity_form: replication.add
-    _title: 'Add Replication'
+    _title: 'Start new deployment'
   requirements:
     _permission: 'add replication entities'
   options:
@@ -74,7 +74,7 @@ entity.replication.edit_form:
   path: '/admin/replication/{replication}/edit'
   defaults:
     _entity_form: replication.edit
-    _title: 'Edit Replication'
+    _title: 'Edit deployment'
   requirements:
     _permission: 'edit replication entities'
   options:
@@ -84,7 +84,7 @@ entity.replication.delete_form:
   path: '/admin/replication/{replication}/delete'
   defaults:
     _entity_form: replication.delete
-    _title: 'Delete Replication'
+    _title: 'Delete deployment'
   requirements:
     _permission: 'delete replication entities'
   options:

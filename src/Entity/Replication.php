@@ -24,7 +24,8 @@ use Drupal\user\UserInterface;
  *   handlers = {
  *     "access" = "Drupal\relaxed\Entity\ReplicationAccessControlHandler",
  *     "view_builder" = "Drupal\relaxed\Entity\ReplicationViewBuilder",
- *     "list_builder" = "Drupal\relaxed\ReplicationListBuilder", *
+ *     "list_builder" = "Drupal\relaxed\ReplicationListBuilder",
+ *     "views_data" = "Drupal\relaxed\Entity\ReplicationViewsData",
  *     "form" = {
  *       "default" = "Drupal\relaxed\Entity\Form\ReplicationForm",
  *       "add" = "Drupal\relaxed\Entity\Form\ReplicationForm",
@@ -104,14 +105,14 @@ class Replication extends ContentEntityBase implements ReplicationInterface {
 
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Created by'))
-      ->setDescription(t('The user ID of person who created the replication.'))
+      ->setDescription(t('The user ID of person who started the deployment.'))
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
       ->setDefaultValueCallback('Drupal\relaxed\Entity\Replication::getCurrentUserId');
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Title'))
-      ->setDescription(t('The title for the replication.'))
+      ->setDescription(t('The title for the deployment.'))
       ->setRequired(TRUE)
       ->setSettings(array(
         'max_length' => 50,
@@ -132,7 +133,7 @@ class Replication extends ContentEntityBase implements ReplicationInterface {
 
     $fields['description'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('Description'))
-      ->setDescription(t('The description for the replication.'))
+      ->setDescription(t('The description for the deployment.'))
       ->setSettings(array(
         'max_length' => 50,
         'text_processing' => 0,
