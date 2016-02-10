@@ -21,11 +21,13 @@ abstract class NormalizerTestBase extends KernelTestBase {
    * @var array
    */
   public static $modules = [
+    'datetime',
     'serialization',
     'system',
     'field',
     'entity_test',
     'text',
+    'options',
     'filter',
     'user'
   ];

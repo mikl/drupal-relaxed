@@ -5,7 +5,9 @@ package: Web services
 version: VERSION
 core: 8.x
 dependencies:
+  - basic_auth
+  - datetime
+  - multiversion
+  - options
   - rest
   - serialization
-  - multiversion
-  - basic_auth

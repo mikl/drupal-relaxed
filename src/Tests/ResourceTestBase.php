@@ -13,9 +13,11 @@ use Drupal\rest\Tests\RESTTestBase;
 abstract class ResourceTestBase extends RESTTestBase {
 
   public static $modules = array(
+    'datetime',
     'entity_test',
     'file',
     'multiversion',
+    'options',
     'rest',
     'relaxed',
     'relaxed_test'

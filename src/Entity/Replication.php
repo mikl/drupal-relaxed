@@ -183,14 +183,15 @@ class Replication extends ContentEntityBase implements ReplicationInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    $replicators = self::getReplicatorAllowedValues();
     $fields['replicator'] = BaseFieldDefinition::create('list_string')
       ->setLabel(t('Replicator'))
       ->setDescription(t('The replicator plugin.'))
       ->setRequired(TRUE)
       ->setSettings(array(
-        'allowed_values' => self::getReplicatorAllowedValues()
+        'allowed_values' => $replicators
       ))
-      ->setDefaultValue(reset(self::getReplicatorAllowedValues()))
+      ->setDefaultValue(reset($replicators))
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'weight' => 0,
@@ -229,7 +230,7 @@ class Replication extends ContentEntityBase implements ReplicationInterface {
     return array(\Drupal::currentUser()->id());
   }
 
-  protected function getReplicatorAllowedValues() {
+  protected static function getReplicatorAllowedValues() {
     $replicators = \Drupal::service('plugin.manager.replicator')->getDefinitions();
     $replicator_allowed_values = [];
     foreach($replicators as $replicator) {
