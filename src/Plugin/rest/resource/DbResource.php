@@ -67,6 +67,22 @@ class DbResource extends ResourceBase {
    * @param $entity
    *
    * @return ResourceResponse
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+   */
+  public function options($entity) {
+    if (!$entity instanceof WorkspaceInterface) {
+      throw new NotFoundHttpException();
+    }
+    $response = new ResourceResponse(NULL, 204);
+    $response->addCacheableDependency($entity);
+
+    return $response;
+  }
+
+  /**
+   * @param $entity
+   *
+   * @return ResourceResponse
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
    * @throws \Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException
